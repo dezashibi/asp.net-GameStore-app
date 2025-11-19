@@ -14,13 +14,15 @@ public static class GamesEndpoints
         new(4, "FIFA 23", "Sports", 69.99M, new DateOnly(2022, 9, 27))
     ];
 
-    public static WebApplication MapGamesEndpoints(this WebApplication app)
+    public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
     {
+        var group = app.MapGroup("games");
+
         // GET /games
-        app.MapGet("games", () => GAMES);
+        group.MapGet("/", () => GAMES);
 
         // GET /games/id
-        app.MapGet("games/{id}", (int id) =>
+        group.MapGet("/{id}", (int id) =>
             {
                 var game = GAMES.Find(game => game.Id == id);
 
@@ -29,7 +31,7 @@ public static class GamesEndpoints
             .WithName(GET_GAME_ENDPOINT_NAME);
 
         // POST /games
-        app.MapPost("GAMES", (CreateGameContract newGame) =>
+        group.MapPost("/", (CreateGameContract newGame) =>
         {
             GameContract game = new(
                 GAMES.Count + 1,
@@ -45,7 +47,7 @@ public static class GamesEndpoints
         });
 
         // PUT /games/id
-        app.MapPut("games/{id}", (int id, UpdateGameContract updatedGame) =>
+        group.MapPut("/{id}", (int id, UpdateGameContract updatedGame) =>
         {
             var index = GAMES.FindIndex(game => game.Id == id);
 
@@ -66,13 +68,13 @@ public static class GamesEndpoints
         });
 
         // DELETE /games/id
-        app.MapDelete("games/{id}", (int id) =>
+        group.MapDelete("/{id}", (int id) =>
         {
             GAMES.RemoveAll(game => game.Id == id);
 
             return Results.NoContent();
         });
 
-        return app;
+        return group;
     }
 }
