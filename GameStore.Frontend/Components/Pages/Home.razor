@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject GamesClient Client
 
 <PageTitle>Game Catalog</PageTitle>
 
@@ -19,7 +20,7 @@
         </thead>
 
         <tbody>
-        
+
         @foreach (var game in _games)
         {
             <tr>
@@ -41,12 +42,11 @@ else
 
 @code{
 
-    private readonly GamesClient _client = new();
     private GameSummary[]? _games;
 
     protected override void OnInitialized()
     {
-        _games = _client.GetGames();
+        _games = Client.GetGames();
     }
 
 }
