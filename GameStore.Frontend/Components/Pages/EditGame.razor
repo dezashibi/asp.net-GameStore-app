@@ -1,32 +1,44 @@
 @page "/edit-game"
-@using GameStore.Frontend.Models
 
 <PageTitle>New Game</PageTitle>
 
 <h3>New Game</h3>
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm Model="@Game" FormName="editGame">
-            <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <InputText id="name" @bind-Value="Game.Name" class="form-control"/>
-            </div>
-            <div class="mb-3">
-                <label for="genre" class="form-label">Genre:</label>
-                <InputSelect id="genre" @bind-Value="Game.GenreId" class="form-select"></InputSelect>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">Price:</label>
-                <InputNumber id="price" @bind-Value="Game.Price" class="form-control"/>
-            </div>
-            <div class="mb-3">
-                <label for="releaseDate" class="form-label">Release Date:</label>
-                <InputDate id="releaseDate" @bind-Value="Game.ReleaseDate" class="form-control"/>
-            </div>
-        </EditForm>
+@if (_genres is not null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@Game" FormName="editGame">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" @bind-Value="Game.Name" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label for="genre" class="form-label">Genre:</label>
+                    <InputSelect id="genre" @bind-Value="Game.GenreId" class="form-select">
+                        <option value="">-- Select a genre --</option>
+                        @foreach (var genre in _genres)
+                        {
+                            <option value="@genre.Id">@genre.Name</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="Game.Price" class="form-control"/>
+                </div>
+                <div class="mb-3">
+                    <label for="releaseDate" class="form-label">Release Date:</label>
+                    <InputDate id="releaseDate" @bind-Value="Game.ReleaseDate" class="form-control"/>
+                </div>
+            </EditForm>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
 
 @code {
 
@@ -35,5 +47,13 @@
         Name = string.Empty,
         ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow)
     };
+
+    private readonly GenresClient _genresClient = new();
+    private Genre[]? _genres;
+
+    protected override void OnInitialized()
+    {
+        _genres = _genresClient.GetGenres();
+    }
 
 }
