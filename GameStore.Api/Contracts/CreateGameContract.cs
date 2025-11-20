@@ -1,3 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GameStore.Api.Contracts;
 
-public record CreateGameContract(string Name, string Genre, decimal Price, DateOnly ReleaseDate);
+public record CreateGameContract(
+    [Required] [StringLength(50)] string Name,
+    [Required] [StringLength(20)] string Genre,
+    [Range(1, 100)] decimal Price,
+    DateOnly ReleaseDate
+);
