@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:5075
+
+### Get all genres
+GET {{baseUrl}}/genres
