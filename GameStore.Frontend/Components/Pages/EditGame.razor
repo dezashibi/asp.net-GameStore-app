@@ -1,13 +1,15 @@
 @page "/edit-game"
+@page "/edit-game/{id:int}"
+
 @inject NavigationManager NavigationManager
 @inject GamesClient GamesClient
 @inject GenresClient GenresClient
 
-<PageTitle>New Game</PageTitle>
+<PageTitle>@_title</PageTitle>
 
-<h3>New Game</h3>
+<h3>@_title</h3>
 
-@if (_genres is not null)
+@if (_genres is not null && Game is not null)
 {
     <div class="row">
         <div class="col-md-4">
@@ -52,14 +54,36 @@ else
 
 @code {
 
+    [Parameter]
+    public int? Id { get; set; }
+
     [SupplyParameterFromForm]
-    private GameDetails Game { get; set; } = new()
-    {
-        Name = string.Empty,
-        ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow)
-    };
+    private GameDetails? Game { get; set; }
 
     private Genre[]? _genres;
+    private string _title = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        // preventing to reset the game on post
+        if (Game is not null)
+            return;
+
+        if (Id is not null)
+        {
+            Game = GamesClient.GetGame(Id.Value);
+            _title = $"Edit '{Game.Name}'";
+        }
+        else
+        {
+            Game = new GameDetails
+            {
+                Name = string.Empty,
+                ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow)
+            };
+            _title = "New Game";
+        }
+    }
 
     protected override void OnInitialized()
     {
@@ -68,7 +92,18 @@ else
 
     private void HandleSubmit()
     {
-        GamesClient.AddGame(Game);
+        ArgumentNullException.ThrowIfNull(Game);
+
+        if (Id is null)
+        {
+            GamesClient.AddGame(Game);
+        }
+        else
+        {
+            Game.Id = Id.Value;
+            GamesClient.UpdateGame(Game);
+        }
+
         NavigationManager.NavigateTo("/");
     }
 
