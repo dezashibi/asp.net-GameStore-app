@@ -12,9 +12,20 @@ Content-Type: application/json
 
 {
   "name": "Minecraft",
-  "genre": "Kids and Family",
+  "genreId": 5,
   "price": 19.99,
   "releaseDate": "2011-11-18"
+}
+
+### Create another new game
+POST {{baseUrl}}/games
+Content-Type: application/json
+
+{
+  "name": "Street Fighter II",
+  "genreId": 1,
+  "price": 19.99,
+  "releaseDate": "1992-07-15"
 }
 
 ### Create game with bad data

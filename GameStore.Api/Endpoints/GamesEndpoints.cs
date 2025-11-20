@@ -1,4 +1,6 @@
 using GameStore.Api.Contracts;
+using GameStore.Api.Data;
+using GameStore.Api.Entities;
 
 namespace GameStore.Api.Endpoints;
 
@@ -31,19 +33,30 @@ public static class GamesEndpoints
             .WithName(GET_GAME_ENDPOINT_NAME);
 
         // POST /games
-        group.MapPost("/", (CreateGameContract newGame) =>
+        group.MapPost("/", (CreateGameContract newGame, GameStoreContext dbContext) =>
         {
-            GameContract game = new(
-                GAMES.Count + 1,
-                newGame.Name,
-                newGame.Genre,
-                newGame.Price,
-                newGame.ReleaseDate
+            var game = new Game
+            {
+                Name = newGame.Name,
+                Genre = dbContext.Genres.Find(newGame.GenreId),
+                GenreId = newGame.GenreId,
+                Price = newGame.Price,
+                ReleaseDate = newGame.ReleaseDate
+            };
+
+            dbContext.Games.Add(game);
+            dbContext.SaveChanges();
+
+            // Keep the contract of response to the end user
+            var gameContract = new GameContract(
+                game.Id,
+                game.Name,
+                game.Genre?.Name ?? "N/A",
+                game.Price,
+                game.ReleaseDate
             );
 
-            GAMES.Add(game);
-
-            return Results.CreatedAtRoute(GET_GAME_ENDPOINT_NAME, new { id = game.Id }, game);
+            return Results.CreatedAtRoute(GET_GAME_ENDPOINT_NAME, new { id = game.Id }, gameContract);
         });
 
         // PUT /games/id
