@@ -1,7 +1,42 @@
 ﻿@page "/"
+@using GameStore.Frontend.Models
 
-<PageTitle>Game Store</PageTitle>
+<PageTitle>Game Catalog</PageTitle>
 
-<h1>Game Store App</h1>
+<table>
+    <thead>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Genre</th>
+    <th>Price</th>
+    <th>Release Date</th>
+    <th>Actions</th>
+    </thead>
 
-Welcome to your new app.
+    <tbody>
+    @foreach (var game in _games)
+    {
+        <tr>
+            <td>@game.Id</td>
+            <td>@game.Name</td>
+            <td>@game.Genre</td>
+            <td>@game.Price $</td>
+            <td>@game.ReleaseDate</td>
+            <td></td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+@code{
+
+    private readonly GameSummary[] _games =
+    [
+        new() { Id = 1, Name = "Sonic Racing Cross Worlds", Genre = "Racing", Price = 69.99M, ReleaseDate = new DateOnly(2025, 9, 25) },
+        new() { Id = 2, Name = "Street Fighter II", Genre = "Fighting", Price = 19.99M, ReleaseDate = new DateOnly(1992, 7, 15) },
+        new() { Id = 3, Name = "Final Fantasy XIV", Genre = "RPG", Price = 59.99M, ReleaseDate = new DateOnly(2010, 9, 30) },
+        new() { Id = 4, Name = "FIFA 23", Genre = "Sports", Price = 69.99M, ReleaseDate = new DateOnly(2022, 9, 27) }
+    ];
+
+}
