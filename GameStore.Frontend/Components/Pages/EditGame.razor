@@ -8,7 +8,7 @@
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm Model="@Game" FormName="editGame">
+            <EditForm Model="@Game" FormName="editGame" OnSubmit="HandleSubmit">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
                     <InputText id="name" @bind-Value="Game.Name" class="form-control"/>
@@ -31,6 +31,7 @@
                     <label for="releaseDate" class="form-label">Release Date:</label>
                     <InputDate id="releaseDate" @bind-Value="Game.ReleaseDate" class="form-control"/>
                 </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </EditForm>
         </div>
     </div>
@@ -42,18 +43,26 @@ else
 
 @code {
 
-    private GameDetails Game { get; } = new()
+    [SupplyParameterFromForm]
+    private GameDetails Game { get; set; } = new()
     {
         Name = string.Empty,
         ReleaseDate = DateOnly.FromDateTime(DateTime.UtcNow)
     };
 
     private readonly GenresClient _genresClient = new();
+    private readonly GamesClient _gamesClient = new();
+
     private Genre[]? _genres;
 
     protected override void OnInitialized()
     {
         _genres = _genresClient.GetGenres();
+    }
+
+    private void HandleSubmit()
+    {
+        _gamesClient.AddGame(Game);
     }
 
 }

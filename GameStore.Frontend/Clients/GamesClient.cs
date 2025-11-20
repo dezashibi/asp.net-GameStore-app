@@ -12,8 +12,27 @@ public class GamesClient
         new() { Id = 4, Name = "FIFA 23", Genre = "Sports", Price = 69.99M, ReleaseDate = new DateOnly(2022, 9, 27) }
     ];
 
+    private readonly Genre[] _genres = new GenresClient().GetGenres();
+
     public GameSummary[] GetGames()
     {
         return [.._games];
+    }
+
+    public void AddGame(GameDetails game)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(game.GenreId);
+        var genre = _genres.Single(genre => genre.Id == int.Parse(game.GenreId));
+
+        var gameSummary = new GameSummary
+        {
+            Id = _games.Count + 1,
+            Name = game.Name,
+            Genre = genre.Name,
+            Price = game.Price,
+            ReleaseDate = game.ReleaseDate
+        };
+
+        _games.Add(gameSummary);
     }
 }
