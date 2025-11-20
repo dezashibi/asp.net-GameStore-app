@@ -39,5 +39,16 @@ Content-Type: application/json
   "releaseDate": "1992-07-15"
 }
 
+### Edit a game with id=2 with bad data
+PUT {{baseUrl}}/games/2
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Street Fighter II Turbo Street Fighter II TurboStreet Fighter II TurboStreet Fighter II TurboStreet Fighter II Turbo",
+  "price": 20000,
+  "releaseDate": "1992-07-15"
+}
+
 ### Delete a game with id=2
 DELETE {{baseUrl}}/games/2

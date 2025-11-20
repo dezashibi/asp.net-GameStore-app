@@ -16,7 +16,7 @@ public static class GamesEndpoints
 
     public static RouteGroupBuilder MapGamesEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("games");
+        var group = app.MapGroup("games").WithParameterValidation();
 
         // GET /games
         group.MapGet("/", () => GAMES);
@@ -32,20 +32,19 @@ public static class GamesEndpoints
 
         // POST /games
         group.MapPost("/", (CreateGameContract newGame) =>
-            {
-                GameContract game = new(
-                    GAMES.Count + 1,
-                    newGame.Name,
-                    newGame.Genre,
-                    newGame.Price,
-                    newGame.ReleaseDate
-                );
+        {
+            GameContract game = new(
+                GAMES.Count + 1,
+                newGame.Name,
+                newGame.Genre,
+                newGame.Price,
+                newGame.ReleaseDate
+            );
 
-                GAMES.Add(game);
+            GAMES.Add(game);
 
-                return Results.CreatedAtRoute(GET_GAME_ENDPOINT_NAME, new { id = game.Id }, game);
-            })
-            .WithParameterValidation();
+            return Results.CreatedAtRoute(GET_GAME_ENDPOINT_NAME, new { id = game.Id }, game);
+        });
 
         // PUT /games/id
         group.MapPut("/{id}", (int id, UpdateGameContract updatedGame) =>
