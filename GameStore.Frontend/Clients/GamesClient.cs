@@ -2,7 +2,7 @@ using GameStore.Frontend.Models;
 
 namespace GameStore.Frontend.Clients;
 
-public class GamesClient
+public class GamesClient(HttpClient httpClient)
 {
     private readonly List<GameSummary> _games =
     [
@@ -12,7 +12,7 @@ public class GamesClient
         new() { Id = 4, Name = "FIFA 23", Genre = "Sports", Price = 69.99M, ReleaseDate = new DateOnly(2022, 9, 27) }
     ];
 
-    private readonly Genre[] _genres = new GenresClient().GetGenres();
+    private readonly Genre[] _genres = new GenresClient(httpClient).GetGenres();
 
     public GameSummary[] GetGames()
     {
