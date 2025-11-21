@@ -55,9 +55,9 @@ else
 
     private GameSummary[]? _games;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _games = Client.GetGames();
+        _games = await Client.GetGamesAsync();
     }
 
     private static string GameUrl(int id)
