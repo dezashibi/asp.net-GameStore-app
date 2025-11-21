@@ -9,3 +9,5 @@ The goal for this project was:
 - Getting to know usage of entity framework core
 - Understanding Razor pages and similarities to other frameworks I've used like svelte and sveltekit
 
+## Thanks
+Thanks to Julio Casal for providing learning materials on this topic.
