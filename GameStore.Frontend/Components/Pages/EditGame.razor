@@ -1,7 +1,6 @@
 @page "/edit-game"
 @page "/edit-game/{id:int}"
 @rendermode InteractiveServer
-@attribute [StreamRendering]
 
 @inject NavigationManager NavigationManager
 @inject GamesClient GamesClient
@@ -15,7 +14,7 @@
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm Model="@Game" FormName="editGame" OnValidSubmit="HandleSubmitAsync">
+            <EditForm Model="@Game" FormName="editGame" OnValidSubmit="HandleSubmitAsync" Enhance>
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
                 <div class="mb-3">
