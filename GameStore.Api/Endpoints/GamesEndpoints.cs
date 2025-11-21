@@ -15,11 +15,16 @@ public static class GamesEndpoints
 
         // GET /games
         group.MapGet("/",
-            async (GameStoreContext dbContext) => await dbContext.Games
-                .Include(game => game.Genre)
-                .Select(game => game.ToSummaryContract())
-                .AsNoTracking()
-                .ToListAsync()
+            async (GameStoreContext dbContext) =>
+            {
+                // await Task.Delay(3000); // Simulate some latency in the server
+
+                return await dbContext.Games
+                    .Include(game => game.Genre)
+                    .Select(game => game.ToSummaryContract())
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
         );
 
         // GET /games/id
